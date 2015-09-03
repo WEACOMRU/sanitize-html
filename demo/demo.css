@@ -1,0 +1,159 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font: 14px/1.25 Arial;
+}
+
+h1 {
+    margin-top: 0;
+    font-weight: normal;
+    font-size: 20px;
+}
+
+button {
+    height: 30px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* Поле с редактируемым контентом
+-------------------------------------------------- */
+.demo-field {
+    padding: 20px;
+    background: #efefef;
+}
+
+.demo-field:after {
+    content: '';
+    clear: both;
+    display: block;
+}
+
+.demo-field_content {
+    margin-bottom: 20px;
+    padding: 5px;
+    height: 300px;
+    overflow-y: scroll;
+    background: #ffffff;
+    outline: none;
+}
+
+.demo-field_btn {
+    margin-left: 10px;
+    float: right;
+}
+
+
+/* Список правил
+-------------------------------------------------- */
+.rule-list-title {
+    margin: 20px 0 10px;
+    font-size: 16px;
+}
+
+.rule-list {
+    margin: 0 20px 0 0;
+    padding: 0;
+    float: left;
+    list-style-type: none;
+}
+
+.rule-list_i {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    position: relative;
+    border-bottom: 1px dashed #ccc;
+}
+
+.rule-list_i:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.rule-list_i_point-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.rule-list_i_point-list_i {
+    margin-bottom: 10px;
+}
+
+.rule-list_i_point-list_i:after {
+    content: '';
+    clear: both;
+    display: block;
+}
+
+.rule-list_i_point-list_i:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.rule-list_i_point-list_i_label {
+    float: left;
+    width: 170px;
+    box-sizing: border-box;
+}
+
+.rule-list_i_point-list_i_label_check {
+    position: absolute;
+    left: 0;
+    top: -2px;
+}
+
+.rule-list_i_point-list_i_label.__with-check {
+    padding-left: 30px;
+    position: relative;
+}
+
+.rule-list_i_point-list_i_field {
+    margin-top: -5px;
+    padding: 0 5px;
+    float: left;
+    width: 200px;
+    height: 26px;
+    line-height: 24px;
+    box-sizing: border-box;
+    border: 1px solid #cccccc;
+}
+
+.rule-list_i_delete {
+    position: absolute;
+    right: 0;
+    bottom: 15px;
+    visibility: hidden;
+    color: #aa0000;
+    border-bottom: 1px dotted #aa0000;
+    opacity: 0;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -ms-transition: all .5s;
+    -o-transition: all .5s;
+    transition: all .5s;
+    cursor: pointer;
+}
+
+.rule-list_i:hover .rule-list_i_delete {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/* Превью объекта содержащего правила
+-------------------------------------------------- */
+.rule-list-preview {
+    margin-bottom: 20px;
+    padding: 20px;
+    width: 500px;
+    min-height: 40px;
+    overflow: hidden;
+    font-family: monospace;
+    background: #efefef;
+}

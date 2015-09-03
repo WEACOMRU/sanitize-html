@@ -1,0 +1,27 @@
+{
+  "name": "html-formatting",
+  "main": "html-formatting.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/WEACOMRU/html-formatting",
+  "devDependencies": {
+    "jquery": "~2.1.4",
+    "qunit": "~1.19.0"
+  },
+  "authors": [
+    "bashkos <bashkos@gmail.com>"
+  ],
+  "description": "HTML formatting in accordance with the prescribed rules",
+  "keywords": [
+    "html",
+    "wysiwig",
+    "cleanup"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Демонстарция работы функции форматирования HTML-разметки</title>
+    <link rel="stylesheet" href="demo.css">
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../html-formatting.js"></script>
+    <script src="demo.js"></script>
+</head>
+<body>
+    <form>
+        <h1>Демонстарция работы функции форматирования HTML-разметки</h1>
+        <p>Скопируйте текст в поле ниже из любого источника и примените форматирование. Правила форматирования вы
+            можете сконфигурировать ниже.</p>
+        <p><b>Важно:</b> данная демонстрация отражает не все возможности форматирования. Подробне об этом читайте в
+            <a href="https://github.com/WEACOMRU/html-formatting" target="_blank">документации</a>.</p>
+
+        <div class="demo-field">
+            <div id="content" class="demo-field_content" contenteditable="true"></div>
+            <button class="demo-field_btn js-formatting">Форматировать</button>
+            <button class="demo-field_btn js-field-clear">Очистить</button>
+        </div>
+
+        <h3 class="rule-list-title">Правила форматирования</h3>
+        <ul class="rule-list js-rule-list">
+            <li class="rule-list_i hidden js-rule-list_i-proto">
+                <ul class="rule-list_i_point-list">
+                    <li class="rule-list_i_point-list_i">
+                        <label class="rule-list_i_point-list_i_label">Теги (через запятую):</label>
+                        <input type="text" class="rule-list_i_point-list_i_field js-rule-list_i_tags">
+                    </li>
+                    <li class="rule-list_i_point-list_i">
+                        <label class="rule-list_i_point-list_i_label __with-check js-rule-list_i_toggle">
+                            <input type="checkbox"
+                                   class="rule-list_i_point-list_i_label_check js-rule-list_i_toggle_check">
+                            Допустимые стили:<br>
+                            (через запятую)
+                        </label>
+                        <input type="text" class="rule-list_i_point-list_i_field js-rule-list_i_styles"
+                               disabled="disabled ">
+                    </li>
+                    <li class="rule-list_i_point-list_i">
+                        <label class="rule-list_i_point-list_i_label __with-check js-rule-list_i_toggle">
+                            <input type="checkbox"
+                                   class="rule-list_i_point-list_i_label_check js-rule-list_i_toggle_check">
+                            Допустимые классы:<br>
+                            (через пробел)
+                        </label>
+                        <input type="text" class="rule-list_i_point-list_i_field js-rule-list_i_classes"
+                               disabled="disabled">
+                    </li>
+                    <li class="rule-list_i_point-list_i">
+                        <label class="rule-list_i_point-list_i_label __with-check">
+                            <input type="checkbox" class="rule-list_i_point-list_i_label_check js-rule-list_i_no-empty">
+                            Удалять пустые
+                        </label>
+                    </li>
+                </ul>
+                <span class="rule-list_i_delete js-rule-list_i_delete">Удалить правило</span>
+            </li>
+        </ul>
+        <div class="rule-list-preview js-rule-list-preview"></div>
+        <button class="js-add-rule">Добавить правило</button>
+    </form>
+</body>
+</html>
