@@ -1,0 +1,6 @@
+bower_components/
+demo/
+tests/
+.eslintrc
+bower.json
+Gruntfile.js

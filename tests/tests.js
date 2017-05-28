@@ -5,6 +5,8 @@ var test = function (input, output, valid_elements) {
     node.innerHTML = input;
     htmlFormatting(node, valid_elements);
 
+    console.log(node.innerHTML);
+
     return node.innerHTML === output;
 };
 
@@ -153,7 +155,7 @@ QUnit.test('html-formatting', function (assert) {
 
     output = '<h1>Hello, World!</h1>' +
              '<p style="text-align: center;">' +
-                'It\'s a test! Go to <a target="_blank" href="https://google.com">Google</a>' +
+                'It\'s a test! Go to <a href="https://google.com" target="_blank">Google</a>' +
              '</p>';
 
     valid_elements = {
@@ -198,7 +200,7 @@ QUnit.test('html-formatting', function (assert) {
              '<br>' +
              '<p>' +
                 'Go <em class="text-decoration: underline;">to</em> ' +
-                '<a target="_blank" href="https://google.com">Google</a>.<br>' +
+                '<a href="https://google.com" target="_blank">Google</a>.<br>' +
                 'Done!' +
              '</p>';
 
