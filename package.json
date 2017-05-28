@@ -1,6 +1,6 @@
 {
   "name": "html-formatting",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "HTML formatting in accordance with the prescribed rules",
   "main": "html-formatting.js",
   "directories": {
