@@ -1,109 +1,133 @@
-# Форматирование html-разметки
-Функция, форматирующая html-разметку по заданным правилам. Обладает следующими особенностями:
-* малый вес (в сжатом виде 2.3 kB);
-* отсутствие каких-либо зависимотсей;
-* простая, и в то же время обладающая богатыми возможностями, конфигурация правил;
-* лицензия [MIT](LICENSE).
+# HTML Markup Sanitizer
 
-##Применение:
-```javascript
-htmlFormatting(node, valid_elements);
-```
-* **node** - элемент DOM, дочерние элементы которого будут отформатированы в соответствии с правилами (сам же контейнер при этом затронут не будет);
-* **valid_elements** - объект, содержащий правила форматирования.
- 
-##Кофигурирование:
-**Примечание:** так как функция писалась в первую очередь для использования в сочетании с редактором TinyMCE, поля объекта, содержащего правила, именуются по приницпу *under_score*, в соответствии с правилами конфигурации самого редактора TinyMCE.
+A lightweight and dependency-free utility for sanitizing HTML markup according to custom rules.
+Key features include:
 
-Каждое правило форматирования - это набор тегов, разделенных запятыми, которым соответствует объект с определенными установками. Объект установок правила может содержать следующие поля:
+- No external dependencies required;
+- Simple yet powerful rule configuration.
 
-* **convert_to** - указание сконверитровать данный элемент в другой;
-* **valid_styles** - перечень разрешенных стилей, разделенных запятыми;
-* **valid_classes** - перечень разрешенных классов, разделенных пробелами;
-* **no_empty** - указание удалять пустые элементы;
-* **process** - функция, в которой вы можете определить какую-либо дополнительную обработку элемента;
-* **valid_elements** - отдельный набор правил для дочерних элементов данного элемента.
- 
-К примеру, следующая конфигурация разрешит вставку только заголовков и параграфов, при этом у заголовков будут удалены все стили и классы:
-```javascript
-valid_elements = {
-    'h1,h2,h3,h4,h5,h6': {
-        valid_styles: '',
-        valid_classes: ''
-    },
-    'p': {}
-}
+## Installation
+
+```shell
+npm i html-formatting
 ```
 
-А вот конфигурация, которая применяется у нас в проекте (мы использум данную функцию для форматирования текста, вставляемого редакторами в TinyMCE из внешних источников):
-```javascript
-headerRule = {
-    'br': {
-        process: function (node) {
-            var parent = node.parentNode,
-                space = document.createTextNode(' ');
+## Usage
 
-            parent.replaceChild(space, node);
-        }
+```js
+import { sanitize } from 'html-formating'
+
+sanitize(node, rules)
+```
+
+- `node`: A DOM element whose children will be formatted according to the specified rules (the container itself will not be affected);
+- `rules`: An object containing the formatting rules ([Rules](#rules)).
+
+### Configuration
+
+#### Rules
+
+**Type definition**: [Rules](src/models/rules.ts)
+
+There are two types of rules: global rules for text nodes,
+and a set of valid HTML elements along with corresponding rules for them
+
+| Param             |          Type          | Description                                                        |
+| :---------------- | :--------------------: | :----------------------------------------------------------------- |
+| **text**          |       `TextRule`       | Global rules for text nodes                                        |
+| **validElements** | `Record<string, Rule>` | Set of valid HTML elements along with corresponding rules for them |
+
+#### TextRule
+
+Global rules for text nodes
+
+| Param           |            Type            | Description                                                                                                  |
+| :-------------- | :------------------------: | :----------------------------------------------------------------------------------------------------------- |
+| **noNBSP**      |         `boolean`          | A predefined handler that removes all non-breaking spaces from the text within the container being processed |
+| **processText** | `(text: string) => string` | A method for defining a custom text handler                                                                  |
+
+_An example_ of processing text by removing all non-breaking spaces and changing case to uppercase
+
+```js
+sanitize(node, {
+  text: { noNBSP: true, processText: (text) => text.toUpperCase() }
+})
+// <p>Hello,[NBSP]World!</p> -> <p>HELLO, WORLD!</p>
+```
+
+#### Valid Elements
+
+`validElements` is an object (a record) where each key is a set of valid HTML tags separated by comma,
+and the value is a manipulation configuration ([Rule](#rule)) appropriate for that set.
+The specified tags can be retained "as is" without any additional processing by simply assigning
+an empty object `{}` as their value.
+From this, it follows that any HTML tags not mentioned in any rules object key will be removed.
+
+_For instance_, to preserve only headings and paragraphs in the final HTML markup,
+the following configuration can be specified:
+
+```js
+sanitize(node, {
+  validElements: { 'h1,h2,h3,h4,h5,h6,p': {} }
+})
+// <div><h1 class="title">Title</h1><div class="Caption"><p>Caption</p></div><p><span class="typography">Description</span></p><div>
+// -> <div><h1 class="title">Title</h1><p>Caption</p><p>Description</p></div>
+```
+
+#### Rule
+
+Configuration of additional processing of html elements
+
+| Param               |               Type               | Description                                                                                                                                                                                                                                                                                                           |
+| :------------------ | :------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **convertTo**       |             `string`             | Specifies the HTML element into which this group should be converted                                                                                                                                                                                                                                                  |
+| **validAttributes** |             `string`             | A comma-separated list of allowed attributes.<br>All attributes are valid if the parameter is not specified.<br>It is possible to use a mask to allow a group of attributes, for example `data-*`                                                                                                                     |
+| **validStyles**     |             `string`             | A comma-separated list of allowed inline styles.<br>All inline styles are valid if the parameter is not specified.<br>It is possible to use a mask to allow a group of styles, for example `font-*`.<br>This parameter **has no effect** if `validAttributes` is specified but does not include the `style` attribute |
+| **validClasses**    |             `string`             | A comma-separated list of allowed css classes.<br>All css classes are valid if the parameter is not specified.<br>It is possible to use a mask to allow a group of classes, for example `indent-*`.<br>This parameter **has no effect** if `validAttributes` is specified but does not include the `class` attribute  |
+| **noEmpty**         |            `boolean`             | Indicates whether to remove empty elements                                                                                                                                                                                                                                                                            |
+| **process**         | `(element: HTMLElement) => void` | A method for defining a custom element handler                                                                                                                                                                                                                                                                        |
+| **validChildren**   |      `Record<string, Rule>`      | Overriding rules for nested elements                                                                                                                                                                                                                                                                                  |
+
+### Cases
+
+#### Convert h1 to h2 and remove all line breaks from headings
+
+```js
+const headerRules = {
+  br: {
+    process: (node) => {
+      const space = document.createTextNode(' ')
+      node.parentNode.replaceChild(space, node)
     }
-},
+  }
+}
 
-valid_elements = {
-    'h1': {
-        convert_to: 'h2',
-        valid_styles: '',
-        valid_classes: '',
-        no_empty: true,
-        valid_elements: headerRule
-    },
-    'h2,h3,h4': {
-        valid_styles: '',
-        valid_classes: '',
-        no_empty: true,
-        valid_elements: headerRule
-    },
-    'p': {
-        valid_styles: 'text-align',
-        valid_classes: '',
-        no_empty: true
-    },
+sanitize(node, {
+  validElements: {
+    h1: { convertTo: 'h2', validChildren: headerRules },
+    'h2,h3,h4,h5,h6': { validChildren: headerRules }
+  }
+})
+// <div><h1>Breaking<br>News</h1></div> -> <div><h2>Breaking News</h2></div>
+```
+
+#### Add target='\_blank' to external links
+
+```js
+sanitize(node, {
+  validElements: {
     a: {
-        valid_styles: '',
-        valid_classes: '',
-        no_empty: true,
-
-        process: function (node) {
-            var host = 'http://' + window.location.host + '/';
-            if (node.href.indexOf(host) !== 0) {
-                node.target = '_blank';
-            }
+      process: (link) => {
+        if (!link.href.startsWith(window.location.origin)) {
+          link.target = '_blank'
         }
-    },
-    'br': {
-        valid_styles: '',
-        valid_classes: ''
-    },
-    'blockquote,b,strong,i,em,s,strike,sub,sup,kbd,ul,ol,li,dl,dt,dd,time,address,thead,tbody,tfoot': {
-        valid_styles: '',
-        valid_classes: '',
-        no_empty: true
-    },
-    'table,tr,th,td': {
-        valid_styles: 'text-align,vertical-align',
-        valid_classes: '',
-        no_empty: true
-    },
-    'embed,iframe': {
-        valid_classes: ''
+      }
     }
-}
+  }
+})
+// <div><a href="https://google.com">Search</a></div> -> <div><a href="https://google.com" target="_blank">Search</a></div>
 ```
 
-Мы запрещаем вставку изображений с внешних источников, к тому же у всех разрешенных элементов удаляем какие бы то ни было
-классы. Кроме того, так как у нас на странице всегда присутствует заголовок первого уровня (название статьи), то при
-копировании таких заголовков преобразовываем их в заголовки второго уровня. Так же, согласно нашим внутренним правилам, мы
-удаляем все дочерние элементы из заголовков, а переносы (`<br>`) заменяем на пробелы. Из стилей мы сохраняем все стили для
-встраиваемых элементов (`embed`, `iframe`), `text-align` для параграфов и таблиц, а так же `vertical-align` только для таблиц.
-Ну и напоследок, к ссылкам на внешние ресурсы добавляется атрибут `target="_blank"`.
+## License
 
-Независимо от правил конфигурации у всех элементов будут всегда удаляться идентификаторы, при их наличии, а в тексте будут заменяться неразрывные пробелы на обычные.
+MIT.
