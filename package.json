@@ -3,6 +3,11 @@
   "version": "2.0.0",
   "description": "HTML formatting in accordance with the given rules",
   "main": "dist/sanitize.js",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
